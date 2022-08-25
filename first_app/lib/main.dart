@@ -2,6 +2,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import './answer.dart';
 import './question.dart';
 
 void main() {
@@ -52,38 +53,40 @@ class MyHomePage extends StatefulWidget {
 class _MyHomeState extends State<MyHomePage> {
   int _questionIndex = 0;
 
-  var questions = [
-    "What is your favourite color?",
-    "What is your favourite animal?"
-  ];
-
   void _answerQuestion() {
-    if (_questionIndex < questions.length - 1) {
-      setState(() {
-        _questionIndex++;
-      });
-    }
+    setState(() {
+      _questionIndex++;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    const questions = [
+      {
+        "questionText": "What's your favourite color?",
+        "answers": ["Black", "Red", "Green", "White"],
+      },
+      {
+        "questionText": "What is your favourite animal?",
+        "answers": ["Rabbit", "Snake", "Elephant", "Lion"],
+      },
+      {
+        "questionText": "Who is your lover?",
+        "answers": ["QANP"],
+      }
+    ];
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: Text("My first app")),
-        body: Column(children: <Widget>[
-          Question(questions[_questionIndex]),
-          ElevatedButton(
-            child: Text("Answer 1"),
-            onPressed: _answerQuestion,
+        body: Column(children: [
+          Question(
+            questions[_questionIndex]["questionText"] as String,
           ),
-          ElevatedButton(
-            child: Text("Answer 2"),
-            onPressed: _answerQuestion,
-          ),
-          ElevatedButton(
-            child: Text("Answer 3"),
-            onPressed: _answerQuestion,
-          ),
+          ...(questions[_questionIndex]["answers"] as List<String>)
+              .map((answer) {
+            return Answer(answer, _answerQuestion);
+          }).toList(),
         ]),
       ),
     );
